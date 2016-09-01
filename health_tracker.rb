@@ -17,15 +17,15 @@
     # comment on physical ailments
     # ailments (foreign key)
       # ailment + comments
-        # headache 
-        # indigestion/stomach ache 
-        # fatigue 
-        # body aches
-        # flu or flu-like symptoms
-        # cold or cold-like symptoms
-        # depression/anxiety
-        # other 
-        # none
+        # 1. headache/migraine 
+        # 2. indigestion/stomach ache 
+        # 3. fatigue 
+        # 4. body aches
+        # 5. flu or flu-like symptoms
+        # 6. cold or cold-like symptoms
+        # 7. depression/anxiety
+        # 8. other 
+        # 9. none
     
 ### UI ### 
 # let the user to enter the data
@@ -71,6 +71,8 @@ SQL
 
 db.execute(ailment_table_cmd)
 db.execute(health_table_cmd)
+
+# will add ailments to ailment table in terminal
 
 
 
