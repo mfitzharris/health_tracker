@@ -46,6 +46,7 @@
 
 require 'sqlite3'
 
+### create database ###
 db = SQLite3::Database.new("health.db")
 db.results_as_hash = true # do i want this??? play w later
 
@@ -75,8 +76,15 @@ db.execute(health_table_cmd)
 # will add ailments to ailment table in terminal
 # INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (7, 8, 103, "tired", 3);
 
+def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
+  db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
+end
 
 
+
+
+# driver code
+# record_health(db, 8, 8, 10000, "okay", 9)
 
 
 
