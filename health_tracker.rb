@@ -73,6 +73,7 @@ db.execute(ailment_table_cmd)
 db.execute(health_table_cmd)
 
 # will add ailments to ailment table in terminal
+# INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (7, 8, 103, "tired", 3);
 
 
 
