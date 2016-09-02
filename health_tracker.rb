@@ -46,9 +46,11 @@
 
 require 'sqlite3'
 
+#######################
 ### create database ###
+#######################
 db = SQLite3::Database.new("health.db")
-db.results_as_hash = true # do i want this??? play w later
+# db.results_as_hash = true # do i want this??? play w later
 
 ailment_table_cmd = <<-SQL
   CREATE TABLE IF NOT EXISTS ailments (
@@ -80,8 +82,32 @@ def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
   db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
 end
 
+ailments = db.execute("SELECT * FROM ailments")
+health = db.execute("SELECT * FROM health")
+p ailments
+
+######################
+### user interface ###
+######################
+
+# def get_users_health
+#   puts "Hello!"
+#   puts "Would you like to record your health? (yes or no)"
+#   wanted = gets.chomp
+
+#   until wanted == "no"
+#     puts "On a scale of 1 to 10, how are you feeling physically?"
+#     phys_stat = gets.chomp.to_i
+
+#     puts "On a scale of 1 to 10, how are you feeling physically?"
+#     ment_stat = gets.chomp.to_i
+
+#     puts "How many steps did you walk/run today?"
+#     steps = gets.chomp.to_i
 
 
+
+# end
 
 # driver code
 # record_health(db, 8, 8, 10000, "okay", 9)
