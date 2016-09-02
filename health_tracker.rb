@@ -82,32 +82,43 @@ def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
   db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
 end
 
-ailments = db.execute("SELECT * FROM ailments")
+$ailments = db.execute("SELECT * FROM ailments")
+p $ailments.class
 health = db.execute("SELECT * FROM health")
-p ailments
+p $ailments
+
+$ailments.each do |ailment|
+  puts "for #{ailment[1]} type: #{ailment[0]}"
+end
 
 ######################
 ### user interface ###
 ######################
 
-# def get_users_health
-#   puts "Hello!"
-#   puts "Would you like to record your health? (yes or no)"
-#   wanted = gets.chomp
+def get_users_health
+  puts "Hello!"
+  puts "On a scale of 1 to 10, how are you feeling physically?"
+  phys_stat = gets.chomp.to_i
 
-#   until wanted == "no"
-#     puts "On a scale of 1 to 10, how are you feeling physically?"
-#     phys_stat = gets.chomp.to_i
+  puts "On a scale of 1 to 10, how are you feeling physically?"
+  ment_stat = gets.chomp.to_i
 
-#     puts "On a scale of 1 to 10, how are you feeling physically?"
-#     ment_stat = gets.chomp.to_i
+  puts "How many steps did you walk/run today?"
+  steps = gets.chomp.to_i
 
-#     puts "How many steps did you walk/run today?"
-#     steps = gets.chomp.to_i
+  puts "Do you have any ailments, currently?"
+  $ailments.each do |ailment|
+    puts "for #{ailment[1]} type: #{ailment[0]}"
+  end
+  ailment = gets.chomp.to_i
 
+  puts "Any comments you want to record?"
+  ailment_cmt = gets.chomp
 
+  # record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
+end
 
-# end
+get_users_health
 
 # driver code
 # record_health(db, 8, 8, 10000, "okay", 9)
