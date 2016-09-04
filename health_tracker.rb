@@ -74,15 +74,21 @@ SQL
 
 db.execute(ailment_table_cmd)
 db.execute(health_table_cmd)
-
 # will add ailments to ailment table in terminal
+
+#
 $ailments = db.execute("SELECT * FROM ailments")
-p $ailments.class
-health = db.execute("SELECT * FROM health")
-p $ailments
+# p $ailments.class
+# p $ailments
 
-# INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (7, 8, 103, "tired", 3);
+$health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment")
+# p $health.class
+# p $health
 
+
+###############
+### METHODS ###
+###############
 ### methods for recording health ###
 def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
   db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
@@ -105,17 +111,29 @@ def get_health(db)
   end
   ailment = gets.chomp.to_i
 
-  puts "Any comments about your current ailment (#{$ailments[ailment]}) you wish to record?"
+  puts "Any comments about your current ailment you wish to record?"
   ailment_cmt = gets.chomp
 
   record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
 end
 
+
+### methods for accessing health data ###
+def day_printer(db)
+  puts "Here are your recorded health stats from today (#{$health[-1][1]})="
+  puts "  Steps Walked/Ran: #{$health[-1][4]}"
+  puts "  Physical Status: #{$health[-1][2]}/10"
+  puts "  Mental Status: #{$health[-1][3]}/10"
+  puts "  Ailment: #{$health[-1][6]}"
+  puts "  Comments: #{$health[-1][5]}"
+  puts " "
+end
 ######################
 ### user interface ###
 ######################
 
-get_health(db)
+# get_health(db)
+day_printer(db)
 
 # def get_users_health
 #   puts "Hello!"
