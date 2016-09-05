@@ -42,7 +42,7 @@
     # run down of the week/month/year? --> 
       # averages
       # % of days w ailments ()
-    # print out a day's health data (any day/day entered)
+    # print out a day's health data
 
 require 'sqlite3'
 
@@ -89,6 +89,8 @@ $weeks_health = db.execute("SELECT health.id, health.dt, health.phys_stat, healt
 # p $weeks_health
 
 $months_health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 30")
+
+
 
 ###############
 ### METHODS ###
@@ -189,6 +191,37 @@ def phys_avg_all(db)
   puts "Your average physical status in the past #{$health.length} entered days is: #{phys_avg}/10"
 end
 
+### mental status avgs ###
+def ment_avg_week(db)
+  ment_tot = 0
+  $weeks_health.each do |day|
+    ment_tot += day[3]
+  end
+  ment_avg = ment_tot/7
+  puts "Your average mental status in the past 7 entered days is: #{ment_avg}/10"
+end
+
+def ment_avg_month(db)
+  ment_tot = 0
+  $months_health.each do |day|
+    ment_tot += day[3]
+  end
+  ment_avg = ment_tot/30
+  puts "Your average mental status in the past 30 entered days is: #{ment_avg}/10"
+end
+
+def ment_avg_all(db)
+  ment_tot = 0
+  $health.each do |day|
+    ment_tot += day[3]
+  end
+  ment_avg = ment_tot/$health.length
+  puts "Your average mental status in the past #{$health.length} entered days is: #{ment_avg}/10"
+end
+
+### ailment stats ###
+
+
 # def week_stats(db)
 #   puts "Here is this past weeks averages:"
 #   step_tot = 0
@@ -226,4 +259,6 @@ end
 # phys_avg_week(db)
 # phys_avg_month(db)
 # phys_avg_all(db)
-
+ment_avg_all(db)
+ment_avg_month(db)
+ment_avg_week(db)
