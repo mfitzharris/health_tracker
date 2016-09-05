@@ -82,10 +82,13 @@ $ailments = db.execute("SELECT * FROM ailments")
 # p $ailments
 
 $health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC")
-p $health.class
-p $health
+# p $health.class
+# p $health
+
 $weeks_health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 7")
-p $weeks_health
+# p $weeks_health
+
+$months_health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 30")
 
 ###############
 ### METHODS ###
@@ -122,15 +125,16 @@ p $health[6][4].class
 ### methods for accessing health data ###
 def day_printer(db)
   puts "Here are your recorded health stats from today (#{$health[-1][1]})="
-  puts "  Steps Walked/Ran: #{$health[-1][4]}"
-  puts "  Physical Status: #{$health[-1][2]}/10"
-  puts "  Mental Status: #{$health[-1][3]}/10"
-  puts "  Ailment: #{$health[-1][6]}"
-  puts "  Comments: #{$health[-1][5]}"
+  puts "  Steps Walked/Ran: #{$health[0][4]}"
+  puts "  Physical Status: #{$health[0][2]}/10"
+  puts "  Mental Status: #{$health[0][3]}/10"
+  puts "  Ailment: #{$health[0][6]}"
+  puts "  Comments: #{$health[0][5]}"
   puts " "
 end
 
-def steps_average_week(db)
+### steps averages ###
+def steps_avg_week(db)
   steps_tot = 0
   $weeks_health.each do |day|
     steps_tot += day[4]
@@ -139,11 +143,23 @@ def steps_average_week(db)
   puts "Your average steps walk/ran in the past 7 entered days is: #{steps_avg} steps"
 end
 
-  # elsif range == "month"
-  #   puts "Your average steps walk/ran in the past 30 days is #{steps_avg}"
-  # else
-  #   puts "Your average steps walk/ran in the past #{$health.length} is #{steps_avg}"
-  # end
+def steps_avg_month(db)
+  steps_tot = 0
+  $months_health.each do |day|
+    steps_tot += day[4]
+  end
+  steps_avg = steps_tot/30
+  puts "Your average steps walk/ran in the past 30 entered days is: #{steps_avg} steps"
+end
+
+def steps_avg_all(db)
+  steps_tot = 0
+  $health.each do |day|
+    steps_tot += day[4]
+  end
+  steps_avg = steps_tot/$health.length
+  puts "Your average steps walk/ran in the past #{$health.length} entered days is: #{steps_avg} steps"
+end
 
 
 
@@ -178,5 +194,7 @@ end
 # record_health(db, 8, 8, 10000, "okay", 9)
 # get_health(db)
 # day_printer(db)
-steps_average_week(db)
+steps_avg_week(db)
+steps_avg_month(db)
+steps_avg_all(db)
 
