@@ -121,7 +121,7 @@ def get_health(db)
   record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
 end
 
-p $health[6][4].class
+
 ### methods for accessing health data ###
 def day_printer(db)
   puts "Here are your recorded health stats from today (#{$health[-1][1]})="
@@ -161,7 +161,33 @@ def steps_avg_all(db)
   puts "Your average steps walk/ran in the past #{$health.length} entered days is: #{steps_avg} steps"
 end
 
+### physical status avgs ###
+def phys_avg_week(db)
+  phys_tot = 0
+  $weeks_health.each do |day|
+    phys_tot += day[2]
+  end
+  phys_avg = phys_tot/7
+  puts "Your average physical status in the past 7 entered days is: #{phys_avg}/10"
+end
 
+def phys_avg_month(db)
+  phys_tot = 0
+  $months_health.each do |day|
+    phys_tot += day[2]
+  end
+  phys_avg = phys_tot/30
+  puts "Your average physical status in the past 30 entered days is: #{phys_avg}/10"
+end
+
+def phys_avg_all(db)
+  phys_tot = 0
+  $health.each do |day|
+    phys_tot += day[2]
+  end
+  phys_avg = phys_tot/$health.length
+  puts "Your average physical status in the past #{$health.length} entered days is: #{phys_avg}/10"
+end
 
 # def week_stats(db)
 #   puts "Here is this past weeks averages:"
@@ -194,7 +220,10 @@ end
 # record_health(db, 8, 8, 10000, "okay", 9)
 # get_health(db)
 # day_printer(db)
-steps_avg_week(db)
-steps_avg_month(db)
-steps_avg_all(db)
+# steps_avg_week(db)
+# steps_avg_month(db)
+# steps_avg_all(db)
+# phys_avg_week(db)
+# phys_avg_month(db)
+# phys_avg_all(db)
 
