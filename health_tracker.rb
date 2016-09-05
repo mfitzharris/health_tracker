@@ -29,26 +29,23 @@
     
 ### UI ### 
 # let the user to enter the data
-    # "what is the date today"
-      # or is there a way to automatically get today's date?
     # "How are you feeling (physically) on a scale of 1-10"
     # "How are you feeling (mentally) on a scale of 1-10"
     # "Any physical ailments today?"
       # list them for user to choose from
-      # or if/else structure ??? 
-      # or??????
     # "How many steps did you walk/run today?"
+# print out the day's health data
 # let the user access the data
-    # run down of the week/month/year? --> 
+    # run down of the week/month/all-time --> 
       # averages
       # % of days w ailments ()
-    # print out a day's health data
 
 require 'sqlite3'
 
-#######################
-### create database ###
-#######################
+#################################
+######### create database #######
+#################################
+
 db = SQLite3::Database.new("health.db")
 # db.results_as_hash = true # do i want this??? play w later
 
@@ -74,56 +71,66 @@ SQL
 
 db.execute(ailment_table_cmd)
 db.execute(health_table_cmd)
-# will add ailments to ailment table in terminal
+# ailments added to ailment table in terminal
 
-#
+
+### create variables ###
+def define_vars(db)
 $ailments = db.execute("SELECT * FROM ailments")
-# p $ailments.class
-# p $ailments
 
 $health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC")
-# p $health.class
-# p $health
 
 $weeks_health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 7")
-# p $weeks_health
 
 $months_health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 30")
+end
+
+define_vars(db)
 
 
-###############
-### METHODS ###
-###############
+
+
+
+#######################################
+##########   METHODS     ##############
+#######################################
+
 ### methods for recording health ###
 def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
   db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
+  define_vars(db)
 end
 
 def get_health(db)
   puts "Let's record today's health!"
-  puts "On a scale of 1 to 10, how are you feeling physically"
+  puts ">> On a scale of 1 to 10, how are you feeling physically"
   phys_stat = gets.chomp.to_i
 
-  puts "On a scale of 1 to 10, how are you feeling mentally"
+  puts ">> On a scale of 1 to 10, how are you feeling mentally"
   ment_stat = gets.chomp.to_i
 
-  puts "How many steps did you walk/run today?"
+  puts ">> How many steps did you walk/run today?"
   steps = gets.chomp.to_i #check delete commas method
 
-  puts "Do you currently have any ailments?"
+  puts ">> Do you currently have any ailments?"
   $ailments.each do |ailment|
     puts "  for #{ailment[1]} type: #{ailment[0]}"
   end
   ailment = gets.chomp.to_i
 
-  puts "Any comments about your current ailment you wish to record?"
+  puts ">> Any comments about your current status you wish to record?"
   ailment_cmt = gets.chomp
 
   record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
+
 end
 
 
+
+#########################################
 ### methods for accessing health data ###
+#########################################
+
 def day_printer(db)
   puts "Here are your recorded health stats from today (#{$health[0][1]})="
   puts "  Steps Walked/Ran: #{$health[0][4]}"
@@ -161,6 +168,7 @@ def steps_avg_all(db)
   puts "Your average steps walk/ran in the past #{$health.length} entered days is: #{steps_avg} steps"
 end
 
+
 ### physical status avgs ###
 def phys_avg_week(db)
   phys_tot = 0
@@ -189,6 +197,7 @@ def phys_avg_all(db)
   puts "Your average physical status in the past #{$health.length} entered days is: #{phys_avg}/10"
 end
 
+
 ### mental status avgs ###
 def ment_avg_week(db)
   ment_tot = 0
@@ -216,6 +225,7 @@ def ment_avg_all(db)
   ment_avg = ment_tot/$health.length
   puts "Your average mental status in the past #{$health.length} entered days is: #{ment_avg}/10"
 end
+
 
 ### ailment stats ###
 def ail_avg_week(db)
@@ -267,16 +277,17 @@ def ail_avg_all(db)
 end
 
 
-######################
-### user interface ###
-######################
+
+
+###############################################
+#########     USER INTERFACE    ###############
+###############################################
 
 puts "Hello!"
-puts ">> To record today's health type: 1"
-puts ">> To print out today's recorded health type: 2"
-puts ">> To calculate data about previously recorded health type: 3"
-
-puts ">> To exit type: 0"
+puts ">> To record today's health >> type: 1"
+puts ">> To print out today's recorded health >> type: 2"
+puts ">> To calculate data about previously recorded health >> type: 3"
+puts ">> To exit >> type: 0"
 
 input = gets.chomp.to_i
 puts ""
@@ -288,16 +299,16 @@ until input == 0
     day_printer(db)
   elsif input == 3
     puts "What would you like to calculate?"
-    puts "  >> To calculate average steps walk/ran type: 1"
-    puts "  >> To calculate average physical health status type: 2"
-    puts "  >> To calculate average mental health status type: 3"
-    puts "  >> To calculate ailment related data type: 4"
+    puts "  >> for average steps walk/ran >> type: 1"
+    puts "  >> for average physical health status >> type: 2"
+    puts "  >> for average mental health status >> type: 3"
+    puts "  >> for ailment related data >> type: 4"
     calc_input = gets.chomp.to_i
 
     if calc_input == 1
-      puts ">> for weekly type: 1"
-      puts ">> for monthly type: 2"
-      puts ">> for all-time type: 3"
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
       step_input = gets.chomp.to_i
 
       if step_input == 1
@@ -311,9 +322,9 @@ until input == 0
       end
 
     elsif calc_input == 2
-      puts ">> for weekly type: 1"
-      puts ">> for monthly type: 2"
-      puts ">> for all-time type: 3"
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
       phys_input = gets.chomp.to_i
 
       if phys_input == 1
@@ -327,9 +338,9 @@ until input == 0
       end
 
     elsif calc_input == 3
-      puts ">> for weekly type: 1"
-      puts ">> for monthly type: 2"
-      puts ">> for all-time type: 3"
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
       ment_input = gets.chomp.to_i
 
       if ment_input == 1
@@ -343,9 +354,9 @@ until input == 0
       end
 
     elsif calc_input == 4
-      puts ">> for weekly type: 1"
-      puts ">> for monthly type: 2"
-      puts ">> for all-time type: 3"
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
       ail_input = gets.chomp.to_i
 
       if ail_input == 1
@@ -357,7 +368,7 @@ until input == 0
       else
         puts "I'm sorry that is not valid input..."
       end
-      
+
     end
 
 
@@ -372,25 +383,3 @@ until input == 0
   input = gets.chomp.to_i
 end
 
-
-
-
-
-###################
-### driver code ###
-###################
-# record_health(db, 8, 8, 10000, "okay", 9)
-# get_health(db)
-# day_printer(db)
-# steps_avg_week(db)
-# steps_avg_month(db)
-# steps_avg_all(db)
-# phys_avg_week(db)
-# phys_avg_month(db)
-# phys_avg_all(db)
-# ment_avg_all(db)
-# ment_avg_month(db)
-# ment_avg_week(db)
-# ail_avg_week(db)
-# ail_avg_month(db)
-# ail_avg_all(db)
