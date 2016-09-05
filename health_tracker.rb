@@ -144,31 +144,13 @@ def day_printer(db)
 end
 
 ### steps averages ###
-def steps_avg_week(db)
+def steps_avg(db, array)
   steps_tot = 0
-  $weeks_health.each do |day|
+  array.each do |day|
     steps_tot += day[4]
   end
-  steps_avg = steps_tot/7
-  puts "Your average steps walk/ran in the past 7 entered days is: #{steps_avg} steps"
-end
-
-def steps_avg_month(db)
-  steps_tot = 0
-  $months_health.each do |day|
-    steps_tot += day[4]
-  end
-  steps_avg = steps_tot/30
-  puts "Your average steps walk/ran in the past 30 entered days is: #{steps_avg} steps"
-end
-
-def steps_avg_all(db)
-  steps_tot = 0
-  $health.each do |day|
-    steps_tot += day[4]
-  end
-  steps_avg = steps_tot/$health.length
-  puts "Your average steps walk/ran in the past #{$health.length} entered days is: #{steps_avg} steps"
+  steps_avg = steps_tot/array.length
+  puts "Your average steps walk/ran in the past #{array.length} entered days is: #{steps_avg} steps"
 end
 
 
@@ -280,107 +262,110 @@ def ail_avg_all(db)
 end
 
 
-
+#driver code
+steps_avg(db, $weeks_health)
+steps_avg(db, $months_health)
+steps_avg(db, $health)
 
 ###########################################
 #########   USER INTERFACE  ###############
 ###########################################
 
-puts "Hello!"
-puts ">> To record today's health >> type: 1"
-puts ">> To print out today's recorded health >> type: 2"
-puts ">> To calculate data about previously recorded health >> type: 3"
-puts ">> To exit >> type: 0"
+# puts "Hello!"
+# puts ">> To record today's health >> type: 1"
+# puts ">> To print out today's recorded health >> type: 2"
+# puts ">> To calculate data about previously recorded health >> type: 3"
+# puts ">> To exit >> type: 0"
 
-input = gets.chomp.to_i
-puts ""
+# input = gets.chomp.to_i
+# puts ""
 
-until input == 0
-  if input ==1
-    get_health(db)
-  elsif input == 2
-    day_printer(db)
-  elsif input == 3
-    puts "What would you like to calculate?"
-    puts "  >> for average steps walk/ran >> type: 1"
-    puts "  >> for average physical health status >> type: 2"
-    puts "  >> for average mental health status >> type: 3"
-    puts "  >> for ailment related data >> type: 4"
-    calc_input = gets.chomp.to_i
+# until input == 0
+#   if input ==1
+#     get_health(db)
+#   elsif input == 2
+#     day_printer(db)
+#   elsif input == 3
+#     puts "What would you like to calculate?"
+#     puts "  >> for average steps walk/ran >> type: 1"
+#     puts "  >> for average physical health status >> type: 2"
+#     puts "  >> for average mental health status >> type: 3"
+#     puts "  >> for ailment related data >> type: 4"
+#     calc_input = gets.chomp.to_i
 
-    if calc_input == 1
-      puts ">> for weekly >> type: 1"
-      puts ">> for monthly >> type: 2"
-      puts ">> for all-time >> type: 3"
-      step_input = gets.chomp.to_i
+#     if calc_input == 1
+#       puts ">> for weekly >> type: 1"
+#       puts ">> for monthly >> type: 2"
+#       puts ">> for all-time >> type: 3"
+#       step_input = gets.chomp.to_i
 
-      if step_input == 1
-        steps_avg_week(db)
-      elsif step_input == 2
-        steps_avg_month(db)
-      elsif step_input == 3
-        steps_avg_all(db)
-      else
-        puts "I'm sorry that is not valid input..."
-      end
+#       if step_input == 1
+#         steps_avg_week(db)
+#       elsif step_input == 2
+#         steps_avg_month(db)
+#       elsif step_input == 3
+#         steps_avg_all(db)
+#       else
+#         puts "I'm sorry that is not valid input..."
+#       end
 
-    elsif calc_input == 2
-      puts ">> for weekly >> type: 1"
-      puts ">> for monthly >> type: 2"
-      puts ">> for all-time >> type: 3"
-      phys_input = gets.chomp.to_i
+#     elsif calc_input == 2
+#       puts ">> for weekly >> type: 1"
+#       puts ">> for monthly >> type: 2"
+#       puts ">> for all-time >> type: 3"
+#       phys_input = gets.chomp.to_i
 
-      if phys_input == 1
-        phys_avg_week(db)
-      elsif phys_input == 2
-        phys_avg_month(db)
-      elsif phys_input == 3
-        phys_avg_all(db)
-      else
-        puts "I'm sorry that is not valid input..."
-      end
+#       if phys_input == 1
+#         phys_avg_week(db)
+#       elsif phys_input == 2
+#         phys_avg_month(db)
+#       elsif phys_input == 3
+#         phys_avg_all(db)
+#       else
+#         puts "I'm sorry that is not valid input..."
+#       end
 
-    elsif calc_input == 3
-      puts ">> for weekly >> type: 1"
-      puts ">> for monthly >> type: 2"
-      puts ">> for all-time >> type: 3"
-      ment_input = gets.chomp.to_i
+#     elsif calc_input == 3
+#       puts ">> for weekly >> type: 1"
+#       puts ">> for monthly >> type: 2"
+#       puts ">> for all-time >> type: 3"
+#       ment_input = gets.chomp.to_i
 
-      if ment_input == 1
-        ment_avg_week(db)
-      elsif ment_input == 2
-        ment_avg_month(db)
-      elsif ment_input == 3
-        ment_avg_all(db)
-      else
-        puts "I'm sorry that is not valid input..."
-      end
+#       if ment_input == 1
+#         ment_avg_week(db)
+#       elsif ment_input == 2
+#         ment_avg_month(db)
+#       elsif ment_input == 3
+#         ment_avg_all(db)
+#       else
+#         puts "I'm sorry that is not valid input..."
+#       end
 
-    elsif calc_input == 4
-      puts ">> for weekly >> type: 1"
-      puts ">> for monthly >> type: 2"
-      puts ">> for all-time >> type: 3"
-      ail_input = gets.chomp.to_i
+#     elsif calc_input == 4
+#       puts ">> for weekly >> type: 1"
+#       puts ">> for monthly >> type: 2"
+#       puts ">> for all-time >> type: 3"
+#       ail_input = gets.chomp.to_i
 
-      if ail_input == 1
-        ail_avg_week(db)
-      elsif ail_input == 2
-        ail_avg_month(db)
-      elsif ail_input == 3
-        ail_avg_all(db)
-      else
-        puts "I'm sorry that is not valid input..."
-      end
+#       if ail_input == 1
+#         ail_avg_week(db)
+#       elsif ail_input == 2
+#         ail_avg_month(db)
+#       elsif ail_input == 3
+#         ail_avg_all(db)
+#       else
+#         puts "I'm sorry that is not valid input..."
+#       end
 
-    end
+#     end
 
-  else
-    puts "I'm sorry that is not valid input..."
-  end
-  puts ""
-  puts ">> To record today's health type: 1"
-  puts ">> To print out today's recorded health type: 2"
-  puts ">> To calculate data about previously recorded health type: 3"
-  puts ">> To exit type: 0"
-  input = gets.chomp.to_i
-end
+#   else
+#     puts "I'm sorry that is not valid input..."
+#   end
+#   puts ""
+#   puts ">> To record today's health type: 1"
+#   puts ">> To print out today's recorded health type: 2"
+#   puts ">> To calculate data about previously recorded health type: 3"
+#   puts ">> To exit type: 0"
+#   input = gets.chomp.to_i
+# end
