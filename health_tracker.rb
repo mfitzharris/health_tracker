@@ -43,7 +43,7 @@
 require 'sqlite3'
 
 #################################
-######### create database #######
+######### CREATE DATABASE #######
 #################################
 
 db = SQLite3::Database.new("health.db")
@@ -91,11 +91,14 @@ define_vars(db)
 
 
 
-#######################################
-##########   METHODS     ##############
-#######################################
+####################################
+##########   METHODS     ###########
+####################################
 
+####################################
 ### methods for recording health ###
+####################################
+
 def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
   db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
   define_vars(db)
@@ -279,9 +282,9 @@ end
 
 
 
-###############################################
-#########     USER INTERFACE    ###############
-###############################################
+###########################################
+#########   USER INTERFACE  ###############
+###########################################
 
 puts "Hello!"
 puts ">> To record today's health >> type: 1"
@@ -371,7 +374,6 @@ until input == 0
 
     end
 
-
   else
     puts "I'm sorry that is not valid input..."
   end
@@ -382,4 +384,3 @@ until input == 0
   puts ">> To exit type: 0"
   input = gets.chomp.to_i
 end
-
