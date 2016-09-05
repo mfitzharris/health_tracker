@@ -42,9 +42,9 @@
 
 require 'sqlite3'
 
-#################################
-######### CREATE DATABASE #######
-#################################
+#######################################
+######### ** CREATE DATABASE ** #######
+#######################################
 
 db = SQLite3::Database.new("health.db")
 # db.results_as_hash = true # do i want this??? play w later
@@ -91,13 +91,13 @@ define_vars(db)
 
 
 
-####################################
-##########   METHODS     ###########
-####################################
+########################################
+##########  ** METHODS **    ###########
+########################################
 
-####################################
-### methods for recording health ###
-####################################
+#########################################
+### methods for recording health data ###
+#########################################
 
 def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
   db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
@@ -144,147 +144,57 @@ def day_printer(db)
 end
 
 ### steps averages ###
-def steps_avg_week(db)
+def steps_average(db, array)
   steps_tot = 0
-  $weeks_health.each do |day|
+  array.each do |day|
     steps_tot += day[4]
   end
-  steps_avg = steps_tot/7
-  puts "Your average steps walk/ran in the past 7 entered days is: #{steps_avg} steps"
-end
-
-def steps_avg_month(db)
-  steps_tot = 0
-  $months_health.each do |day|
-    steps_tot += day[4]
-  end
-  steps_avg = steps_tot/30
-  puts "Your average steps walk/ran in the past 30 entered days is: #{steps_avg} steps"
-end
-
-def steps_avg_all(db)
-  steps_tot = 0
-  $health.each do |day|
-    steps_tot += day[4]
-  end
-  steps_avg = steps_tot/$health.length
-  puts "Your average steps walk/ran in the past #{$health.length} entered days is: #{steps_avg} steps"
+  steps_avg = steps_tot/array.length
+  puts "Your average steps walk/ran in the past #{array.length} entered days is: #{steps_avg} steps"
 end
 
 
-### physical status avgs ###
-def phys_avg_week(db)
+### physical status averages ###
+def phys_average(db, array)
   phys_tot = 0
-  $weeks_health.each do |day|
+  array.each do |day|
     phys_tot += day[2]
   end
-  phys_avg = phys_tot/7
-  puts "Your average physical status in the past 7 entered days is: #{phys_avg}/10"
+  phys_avg = phys_tot/array.length
+  puts "Your average physical status in the past #{array.length} entered days is: #{phys_avg}/10"
 end
 
-def phys_avg_month(db)
-  phys_tot = 0
-  $months_health.each do |day|
-    phys_tot += day[2]
-  end
-  phys_avg = phys_tot/30
-  puts "Your average physical status in the past 30 entered days is: #{phys_avg}/10"
-end
-
-def phys_avg_all(db)
-  phys_tot = 0
-  $health.each do |day|
-    phys_tot += day[2]
-  end
-  phys_avg = phys_tot/$health.length
-  puts "Your average physical status in the past #{$health.length} entered days is: #{phys_avg}/10"
-end
-
-
-### mental status avgs ###
-def ment_avg_week(db)
+### mental status averages ###
+def ment_average(db, array)
   ment_tot = 0
-  $weeks_health.each do |day|
+  array.each do |day|
     ment_tot += day[3]
   end
-  ment_avg = ment_tot/7
-  puts "Your average mental status in the past 7 entered days is: #{ment_avg}/10"
+  ment_avg = ment_tot/array.length
+  puts "Your average mental status in the past #{array.length} entered days is: #{ment_avg}/10"
 end
-
-def ment_avg_month(db)
-  ment_tot = 0
-  $months_health.each do |day|
-    ment_tot += day[3]
-  end
-  ment_avg = ment_tot/30
-  puts "Your average mental status in the past 30 entered days is: #{ment_avg}/10"
-end
-
-def ment_avg_all(db)
-  ment_tot = 0
-  $health.each do |day|
-    ment_tot += day[3]
-  end
-  ment_avg = ment_tot/$health.length
-  puts "Your average mental status in the past #{$health.length} entered days is: #{ment_avg}/10"
-end
-
 
 ### ailment stats ###
-def ail_avg_week(db)
-  weeks_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 7")
+def ail_average(db, array)
+  just_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT #{array.length}")
   rundown = Hash.new(0)
 
-  weeks_ailments.each do |ailment|
+  just_ailments.each do |ailment|
     rundown[ailment] += 1
   end
 
-  puts "Your recorded ailments in the past 7 days are as follows:"
+  puts "Your recorded ailments in the past #{array.length} days are as follows:"
   rundown.each do |ailment, num|
-    percent = num.to_f/7 * 100
+    percent = num.to_f/array.length * 100
     puts "  You recorded #{ailment} #{num} times," 
-    puts "    or ~#{percent.to_i} percent of the 7 entered days"
-  end
-end
-
-def ail_avg_month(db)
-  months_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 30")
-  rundown = Hash.new(0)
-
-  months_ailments.each do |ailment|
-    rundown[ailment] += 1
-  end
-
-  puts "Your recorded ailments in the past 30 days are as follows:"
-  rundown.each do |ailment, num|
-    percent = num.to_f/30 * 100
-    puts "  You recorded #{ailment} #{num} times," 
-    puts "    or ~#{percent.to_i} percent of the 30 entered days"
-  end
-end
-
-def ail_avg_all(db)
-  all_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC")
-  rundown = Hash.new(0)
-
-  all_ailments.each do |ailment|
-    rundown[ailment] += 1
-  end
-
-  puts "Your recorded ailments in the past #{all_ailments.length} days are as follows:"
-  rundown.each do |ailment, num|
-    percent = num.to_f/all_ailments.length * 100
-    puts "  You recorded #{ailment} #{num} times," 
-    puts "    or ~#{percent.to_i} percent of the #{all_ailments.length} entered days"
+    puts "    or ~#{percent.to_i} percent of the #{array.length} entered days"
   end
 end
 
 
-
-
-###########################################
-#########   USER INTERFACE  ###############
-###########################################
+###############################################
+#########  ** USER INTERFACE ** ###############
+###############################################
 
 puts "Hello!"
 puts ">> To record today's health >> type: 1"
@@ -315,11 +225,11 @@ until input == 0
       step_input = gets.chomp.to_i
 
       if step_input == 1
-        steps_avg_week(db)
+        steps_average(db, $weeks_health)
       elsif step_input == 2
-        steps_avg_month(db)
+        steps_average(db, $months_health)
       elsif step_input == 3
-        steps_avg_all(db)
+        steps_average(db, $health)
       else
         puts "I'm sorry that is not valid input..."
       end
@@ -331,11 +241,11 @@ until input == 0
       phys_input = gets.chomp.to_i
 
       if phys_input == 1
-        phys_avg_week(db)
+        phys_average(db, $weeks_health)
       elsif phys_input == 2
-        phys_avg_month(db)
+        phys_average(db, $months_health)
       elsif phys_input == 3
-        phys_avg_all(db)
+        phys_average(db, $health)
       else
         puts "I'm sorry that is not valid input..."
       end
@@ -347,11 +257,11 @@ until input == 0
       ment_input = gets.chomp.to_i
 
       if ment_input == 1
-        ment_avg_week(db)
+        ment_average(db, $weeks_health)
       elsif ment_input == 2
-        ment_avg_month(db)
+        ment_average(db, $months_health)
       elsif ment_input == 3
-        ment_avg_all(db)
+        ment_average(db, $health)
       else
         puts "I'm sorry that is not valid input..."
       end
@@ -363,14 +273,17 @@ until input == 0
       ail_input = gets.chomp.to_i
 
       if ail_input == 1
-        ail_avg_week(db)
+        ail_average(db, $weeks_health)
       elsif ail_input == 2
-        ail_avg_month(db)
+        ail_average(db, $months_health)
       elsif ail_input == 3
-        ail_avg_all(db)
+        ail_average(db, $health)
       else
         puts "I'm sorry that is not valid input..."
       end
+
+    else
+      puts "I'm sorry that is not valid input..."
 
     end
 
@@ -384,3 +297,6 @@ until input == 0
   puts ">> To exit type: 0"
   input = gets.chomp.to_i
 end
+
+puts "Thank you for recording your health! :)"
+puts "Remember to record tomorrow's health too! Have a great day!"
