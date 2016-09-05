@@ -175,51 +175,19 @@ def ment_average(db, array)
 end
 
 ### ailment stats ###
-def ail_avg_week(db)
-  weeks_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 7")
+def ail_average(db, array)
+  just_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT #{array.length}")
   rundown = Hash.new(0)
 
-  weeks_ailments.each do |ailment|
+  just_ailments.each do |ailment|
     rundown[ailment] += 1
   end
 
-  puts "Your recorded ailments in the past 7 days are as follows:"
+  puts "Your recorded ailments in the past #{array.length} days are as follows:"
   rundown.each do |ailment, num|
-    percent = num.to_f/7 * 100
+    percent = num.to_f/array.length * 100
     puts "  You recorded #{ailment} #{num} times," 
-    puts "    or ~#{percent.to_i} percent of the 7 entered days"
-  end
-end
-
-def ail_avg_month(db)
-  months_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 30")
-  rundown = Hash.new(0)
-
-  months_ailments.each do |ailment|
-    rundown[ailment] += 1
-  end
-
-  puts "Your recorded ailments in the past 30 days are as follows:"
-  rundown.each do |ailment, num|
-    percent = num.to_f/30 * 100
-    puts "  You recorded #{ailment} #{num} times," 
-    puts "    or ~#{percent.to_i} percent of the 30 entered days"
-  end
-end
-
-def ail_avg_all(db)
-  all_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC")
-  rundown = Hash.new(0)
-
-  all_ailments.each do |ailment|
-    rundown[ailment] += 1
-  end
-
-  puts "Your recorded ailments in the past #{all_ailments.length} days are as follows:"
-  rundown.each do |ailment, num|
-    percent = num.to_f/all_ailments.length * 100
-    puts "  You recorded #{ailment} #{num} times," 
-    puts "    or ~#{percent.to_i} percent of the #{all_ailments.length} entered days"
+    puts "    or ~#{percent.to_i} percent of the #{array.length} entered days"
   end
 end
 
@@ -231,9 +199,12 @@ end
 # phys_average(db, $weeks_health)
 # phys_average(db, $months_health)
 # phys_average(db, $health)
-ment_average(db, $weeks_health)
-ment_average(db, $months_health)
-ment_average(db, $health)
+# ment_average(db, $weeks_health)
+# ment_average(db, $months_health)
+# ment_average(db, $health)
+ail_average(db, $weeks_health)
+ail_average(db, $months_health)
+ail_average(db, $health)
 
 ###########################################
 #########   USER INTERFACE  ###############
