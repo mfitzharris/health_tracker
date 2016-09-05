@@ -154,7 +154,7 @@ def steps_average(db, array)
 end
 
 
-### physical status avgs ###
+### physical status averages ###
 def phys_average(db, array)
   phys_tot = 0
   array.each do |day|
@@ -164,62 +164,15 @@ def phys_average(db, array)
   puts "Your average physical status in the past #{array.length} entered days is: #{phys_avg}/10"
 end
 
-def phys_avg_week(db)
-  phys_tot = 0
-  $weeks_health.each do |day|
-    phys_tot += day[2]
-  end
-  phys_avg = phys_tot/7
-  puts "Your average physical status in the past 7 entered days is: #{phys_avg}/10"
-end
-
-def phys_avg_month(db)
-  phys_tot = 0
-  $months_health.each do |day|
-    phys_tot += day[2]
-  end
-  phys_avg = phys_tot/30
-  puts "Your average physical status in the past 30 entered days is: #{phys_avg}/10"
-end
-
-def phys_avg_all(db)
-  phys_tot = 0
-  $health.each do |day|
-    phys_tot += day[2]
-  end
-  phys_avg = phys_tot/$health.length
-  puts "Your average physical status in the past #{$health.length} entered days is: #{phys_avg}/10"
-end
-
-
-### mental status avgs ###
-def ment_avg_week(db)
+### mental status averages ###
+def ment_average(db, array)
   ment_tot = 0
-  $weeks_health.each do |day|
+  array.each do |day|
     ment_tot += day[3]
   end
-  ment_avg = ment_tot/7
-  puts "Your average mental status in the past 7 entered days is: #{ment_avg}/10"
+  ment_avg = ment_tot/array.length
+  puts "Your average mental status in the past #{array.length} entered days is: #{ment_avg}/10"
 end
-
-def ment_avg_month(db)
-  ment_tot = 0
-  $months_health.each do |day|
-    ment_tot += day[3]
-  end
-  ment_avg = ment_tot/30
-  puts "Your average mental status in the past 30 entered days is: #{ment_avg}/10"
-end
-
-def ment_avg_all(db)
-  ment_tot = 0
-  $health.each do |day|
-    ment_tot += day[3]
-  end
-  ment_avg = ment_tot/$health.length
-  puts "Your average mental status in the past #{$health.length} entered days is: #{ment_avg}/10"
-end
-
 
 ### ailment stats ###
 def ail_avg_week(db)
@@ -272,12 +225,15 @@ end
 
 
 #driver code
-steps_average(db, $weeks_health)
-steps_average(db, $months_health)
-steps_average(db, $health)
-phys_average(db, $weeks_health)
-phys_average(db, $months_health)
-phys_average(db, $health)
+# steps_average(db, $weeks_health)
+# steps_average(db, $months_health)
+# steps_average(db, $health)
+# phys_average(db, $weeks_health)
+# phys_average(db, $months_health)
+# phys_average(db, $health)
+ment_average(db, $weeks_health)
+ment_average(db, $months_health)
+ment_average(db, $health)
 
 ###########################################
 #########   USER INTERFACE  ###############
