@@ -42,9 +42,9 @@
 
 require 'sqlite3'
 
-#################################
-######### CREATE DATABASE #######
-#################################
+#######################################
+######### ** CREATE DATABASE ** #######
+#######################################
 
 db = SQLite3::Database.new("health.db")
 # db.results_as_hash = true # do i want this??? play w later
@@ -91,13 +91,13 @@ define_vars(db)
 
 
 
-####################################
-##########   METHODS     ###########
-####################################
+########################################
+##########  ** METHODS **    ###########
+########################################
 
-####################################
-### methods for recording health ###
-####################################
+#########################################
+### methods for recording health data ###
+#########################################
 
 def record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
   db.execute("INSERT INTO health (phys_stat, ment_stat, steps, ailment_cmt, ailment) VALUES (?, ?, ?, ?, ?)", [phys_stat, ment_stat, steps, ailment_cmt, ailment])
@@ -192,119 +192,111 @@ def ail_average(db, array)
 end
 
 
-#driver code
-# steps_average(db, $weeks_health)
-# steps_average(db, $months_health)
-# steps_average(db, $health)
-# phys_average(db, $weeks_health)
-# phys_average(db, $months_health)
-# phys_average(db, $health)
-# ment_average(db, $weeks_health)
-# ment_average(db, $months_health)
-# ment_average(db, $health)
-ail_average(db, $weeks_health)
-ail_average(db, $months_health)
-ail_average(db, $health)
+###############################################
+#########  ** USER INTERFACE ** ###############
+###############################################
 
-###########################################
-#########   USER INTERFACE  ###############
-###########################################
+puts "Hello!"
+puts ">> To record today's health >> type: 1"
+puts ">> To print out today's recorded health >> type: 2"
+puts ">> To calculate data about previously recorded health >> type: 3"
+puts ">> To exit >> type: 0"
 
-# puts "Hello!"
-# puts ">> To record today's health >> type: 1"
-# puts ">> To print out today's recorded health >> type: 2"
-# puts ">> To calculate data about previously recorded health >> type: 3"
-# puts ">> To exit >> type: 0"
+input = gets.chomp.to_i
+puts ""
 
-# input = gets.chomp.to_i
-# puts ""
+until input == 0
+  if input ==1
+    get_health(db)
+  elsif input == 2
+    day_printer(db)
+  elsif input == 3
+    puts "What would you like to calculate?"
+    puts "  >> for average steps walk/ran >> type: 1"
+    puts "  >> for average physical health status >> type: 2"
+    puts "  >> for average mental health status >> type: 3"
+    puts "  >> for ailment related data >> type: 4"
+    calc_input = gets.chomp.to_i
 
-# until input == 0
-#   if input ==1
-#     get_health(db)
-#   elsif input == 2
-#     day_printer(db)
-#   elsif input == 3
-#     puts "What would you like to calculate?"
-#     puts "  >> for average steps walk/ran >> type: 1"
-#     puts "  >> for average physical health status >> type: 2"
-#     puts "  >> for average mental health status >> type: 3"
-#     puts "  >> for ailment related data >> type: 4"
-#     calc_input = gets.chomp.to_i
+    if calc_input == 1
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
+      step_input = gets.chomp.to_i
 
-#     if calc_input == 1
-#       puts ">> for weekly >> type: 1"
-#       puts ">> for monthly >> type: 2"
-#       puts ">> for all-time >> type: 3"
-#       step_input = gets.chomp.to_i
+      if step_input == 1
+        steps_average(db, $weeks_health)
+      elsif step_input == 2
+        steps_average(db, $months_health)
+      elsif step_input == 3
+        steps_average(db, $health)
+      else
+        puts "I'm sorry that is not valid input..."
+      end
 
-#       if step_input == 1
-#         steps_avg_week(db)
-#       elsif step_input == 2
-#         steps_avg_month(db)
-#       elsif step_input == 3
-#         steps_avg_all(db)
-#       else
-#         puts "I'm sorry that is not valid input..."
-#       end
+    elsif calc_input == 2
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
+      phys_input = gets.chomp.to_i
 
-#     elsif calc_input == 2
-#       puts ">> for weekly >> type: 1"
-#       puts ">> for monthly >> type: 2"
-#       puts ">> for all-time >> type: 3"
-#       phys_input = gets.chomp.to_i
+      if phys_input == 1
+        phys_average(db, $weeks_health)
+      elsif phys_input == 2
+        phys_average(db, $months_health)
+      elsif phys_input == 3
+        phys_average(db, $health)
+      else
+        puts "I'm sorry that is not valid input..."
+      end
 
-#       if phys_input == 1
-#         phys_avg_week(db)
-#       elsif phys_input == 2
-#         phys_avg_month(db)
-#       elsif phys_input == 3
-#         phys_avg_all(db)
-#       else
-#         puts "I'm sorry that is not valid input..."
-#       end
+    elsif calc_input == 3
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
+      ment_input = gets.chomp.to_i
 
-#     elsif calc_input == 3
-#       puts ">> for weekly >> type: 1"
-#       puts ">> for monthly >> type: 2"
-#       puts ">> for all-time >> type: 3"
-#       ment_input = gets.chomp.to_i
+      if ment_input == 1
+        ment_average(db, $weeks_health)
+      elsif ment_input == 2
+        ment_average(db, $months_health)
+      elsif ment_input == 3
+        ment_average(db, $health)
+      else
+        puts "I'm sorry that is not valid input..."
+      end
 
-#       if ment_input == 1
-#         ment_avg_week(db)
-#       elsif ment_input == 2
-#         ment_avg_month(db)
-#       elsif ment_input == 3
-#         ment_avg_all(db)
-#       else
-#         puts "I'm sorry that is not valid input..."
-#       end
+    elsif calc_input == 4
+      puts ">> for weekly >> type: 1"
+      puts ">> for monthly >> type: 2"
+      puts ">> for all-time >> type: 3"
+      ail_input = gets.chomp.to_i
 
-#     elsif calc_input == 4
-#       puts ">> for weekly >> type: 1"
-#       puts ">> for monthly >> type: 2"
-#       puts ">> for all-time >> type: 3"
-#       ail_input = gets.chomp.to_i
+      if ail_input == 1
+        ail_average(db, $weeks_health)
+      elsif ail_input == 2
+        ail_average(db, $months_health)
+      elsif ail_input == 3
+        ail_average(db, $health)
+      else
+        puts "I'm sorry that is not valid input..."
+      end
 
-#       if ail_input == 1
-#         ail_avg_week(db)
-#       elsif ail_input == 2
-#         ail_avg_month(db)
-#       elsif ail_input == 3
-#         ail_avg_all(db)
-#       else
-#         puts "I'm sorry that is not valid input..."
-#       end
+    else
+      puts "I'm sorry that is not valid input..."
 
-#     end
+    end
 
-#   else
-#     puts "I'm sorry that is not valid input..."
-#   end
-#   puts ""
-#   puts ">> To record today's health type: 1"
-#   puts ">> To print out today's recorded health type: 2"
-#   puts ">> To calculate data about previously recorded health type: 3"
-#   puts ">> To exit type: 0"
-#   input = gets.chomp.to_i
-# end
+  else
+    puts "I'm sorry that is not valid input..."
+  end
+  puts ""
+  puts ">> To record today's health type: 1"
+  puts ">> To print out today's recorded health type: 2"
+  puts ">> To calculate data about previously recorded health type: 3"
+  puts ">> To exit type: 0"
+  input = gets.chomp.to_i
+end
+
+puts "Thank you for recording your health! :)"
+puts "Remember to record tomorrow's health too! Have a great day!"
