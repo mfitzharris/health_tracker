@@ -91,7 +91,6 @@ $weeks_health = db.execute("SELECT health.id, health.dt, health.phys_stat, healt
 $months_health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 30")
 
 
-
 ###############
 ### METHODS ###
 ###############
@@ -132,7 +131,6 @@ def day_printer(db)
   puts "  Mental Status: #{$health[0][3]}/10"
   puts "  Ailment: #{$health[0][6]}"
   puts "  Comments: #{$health[0][5]}"
-  puts " "
 end
 
 ### steps averages ###
@@ -220,7 +218,53 @@ def ment_avg_all(db)
 end
 
 ### ailment stats ###
+def ail_avg_week(db)
+  weeks_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 7")
+  rundown = Hash.new(0)
 
+  weeks_ailments.each do |ailment|
+    rundown[ailment] += 1
+  end
+
+  puts "Your recorded ailments in the past 7 days are as follows:"
+  rundown.each do |ailment, num|
+    percent = num.to_f/7 * 100
+    puts "  You recorded #{ailment} #{num} times," 
+    puts "    or ~#{percent.to_i} percent of the 7 entered days"
+  end
+end
+
+def ail_avg_month(db)
+  months_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 30")
+  rundown = Hash.new(0)
+
+  months_ailments.each do |ailment|
+    rundown[ailment] += 1
+  end
+
+  puts "Your recorded ailments in the past 30 days are as follows:"
+  rundown.each do |ailment, num|
+    percent = num.to_f/30 * 100
+    puts "  You recorded #{ailment} #{num} times," 
+    puts "    or ~#{percent.to_i} percent of the 30 entered days"
+  end
+end
+
+def ail_avg_all(db)
+  all_ailments = db.execute("select ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC")
+  rundown = Hash.new(0)
+
+  all_ailments.each do |ailment|
+    rundown[ailment] += 1
+  end
+
+  puts "Your recorded ailments in the past #{all_ailments.length} days are as follows:"
+  rundown.each do |ailment, num|
+    percent = num.to_f/all_ailments.length * 100
+    puts "  You recorded #{ailment} #{num} times," 
+    puts "    or ~#{percent.to_i} percent of the #{all_ailments.length} entered days"
+  end
+end
 
 # def week_stats(db)
 #   puts "Here is this past weeks averages:"
@@ -259,6 +303,9 @@ end
 # phys_avg_week(db)
 # phys_avg_month(db)
 # phys_avg_all(db)
-ment_avg_all(db)
-ment_avg_month(db)
-ment_avg_week(db)
+# ment_avg_all(db)
+# ment_avg_month(db)
+# ment_avg_week(db)
+ail_avg_week(db)
+ail_avg_month(db)
+ail_avg_all(db)
