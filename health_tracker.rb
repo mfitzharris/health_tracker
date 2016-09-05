@@ -81,10 +81,11 @@ $ailments = db.execute("SELECT * FROM ailments")
 # p $ailments.class
 # p $ailments
 
-$health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment")
-# p $health.class
-# p $health
-
+$health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC")
+p $health.class
+p $health
+$weeks_health = db.execute("SELECT health.id, health.dt, health.phys_stat, health.ment_stat, health.steps, health.ailment_cmt, ailments.ailment FROM ailments JOIN health on ailments.id = health.ailment ORDER BY HEALTH.ID DESC LIMIT 7")
+p $weeks_health
 
 ###############
 ### METHODS ###
@@ -117,7 +118,7 @@ def get_health(db)
   record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
 end
 
-
+p $health[6][4].class
 ### methods for accessing health data ###
 def day_printer(db)
   puts "Here are your recorded health stats from today (#{$health[-1][1]})="
@@ -128,40 +129,54 @@ def day_printer(db)
   puts "  Comments: #{$health[-1][5]}"
   puts " "
 end
+
+def steps_average_week(db)
+  steps_tot = 0
+  $weeks_health.each do |day|
+    steps_tot += day[4]
+  end
+  steps_avg = steps_tot/7
+  puts "Your average steps walk/ran in the past 7 entered days is: #{steps_avg} steps"
+end
+
+  # elsif range == "month"
+  #   puts "Your average steps walk/ran in the past 30 days is #{steps_avg}"
+  # else
+  #   puts "Your average steps walk/ran in the past #{$health.length} is #{steps_avg}"
+  # end
+
+
+
+# def week_stats(db)
+#   puts "Here is this past weeks averages:"
+#   step_tot = 0
+#   phys_tot = 0
+#   ment_tot = 0
+#   (-1..-7).each do |day|
+#       step_tot += day[4]
+#       phys_tot += day[2]
+#       ment_tot += day[3] 
+#   end
+#   step_avg = step_tot.to_f/7
+#   phys_avg = phys_tot.to_f/7
+#   ment_avg = ment_tot.to_f/7
+#   puts "  Steps: #{step_avg}"
+#   puts "  Physical Status: #{phys_avg}"
+#   puts "  Mental Status: #{ment_avg}"
+# end
+
 ######################
 ### user interface ###
 ######################
 
-# get_health(db)
-day_printer(db)
 
-# def get_users_health
-#   puts "Hello!"
-#   puts "On a scale of 1 to 10, how are you feeling physically?"
-#   phys_stat = gets.chomp.to_i
 
-#   puts "On a scale of 1 to 10, how are you feeling physically?"
-#   ment_stat = gets.chomp.to_i
 
-#   puts "How many steps did you walk/run today?"
-#   steps = gets.chomp.to_i
-
-#   puts "Do you have any ailments, currently?"
-#   $ailments.each do |ailment|
-#     puts "for #{ailment[1]} type: #{ailment[0]}"
-#   end
-#   ailment = gets.chomp.to_i
-
-#   puts "Any comments you want to record?"
-#   ailment_cmt = gets.chomp
-
-#   # record_health(db, phys_stat, ment_stat, steps, ailment_cmt, ailment)
-# end
-
-# get_users_health
-
-# driver code
+###################
+### driver code ###
+###################
 # record_health(db, 8, 8, 10000, "okay", 9)
-
-
+# get_health(db)
+# day_printer(db)
+steps_average_week(db)
 
