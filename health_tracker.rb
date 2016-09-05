@@ -144,7 +144,7 @@ def day_printer(db)
 end
 
 ### steps averages ###
-def steps_avg(db, array)
+def steps_average(db, array)
   steps_tot = 0
   array.each do |day|
     steps_tot += day[4]
@@ -155,6 +155,15 @@ end
 
 
 ### physical status avgs ###
+def phys_average(db, array)
+  phys_tot = 0
+  array.each do |day|
+    phys_tot += day[2]
+  end
+  phys_avg = phys_tot/array.length
+  puts "Your average physical status in the past #{array.length} entered days is: #{phys_avg}/10"
+end
+
 def phys_avg_week(db)
   phys_tot = 0
   $weeks_health.each do |day|
@@ -263,9 +272,12 @@ end
 
 
 #driver code
-steps_avg(db, $weeks_health)
-steps_avg(db, $months_health)
-steps_avg(db, $health)
+steps_average(db, $weeks_health)
+steps_average(db, $months_health)
+steps_average(db, $health)
+phys_average(db, $weeks_health)
+phys_average(db, $months_health)
+phys_average(db, $health)
 
 ###########################################
 #########   USER INTERFACE  ###############
